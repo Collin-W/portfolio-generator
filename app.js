@@ -1,16 +1,63 @@
+const generatePage = require('./src/page-template.js');
+
+const fs = require('fs');
+ 
+const profileDataArgs = process.argv.slice(2);
+ 
+const [name, github] = profileDataArgs;
+
+fs.writeFile('./index.html', generatePage(name, github), err => {
+    if (err) throw new Error(err);
+  
+    console.log('Portfolio complete! Check out index.html to see the output!');
+  });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // var commandLineArgs = process.argv;
 // console.log(commandLineArgs);
-
-const profileDataArgs = process.argv.slice(2, process.argv.length);
-console.log(profileDataArgs);
-
-// var message = 'Hello Node!';
-// console.log(message);
+// // var message = 'Hello Node!';
+// // console.log(message);
 
 
-const printProfileData = (profileDataArr) => {
-    profileDataArr.forEach(profileItem => console.log(profileItem));
-};
-printProfileData(profileDataArgs);
+// const printProfileData = (profileDataArr) => {
+//     profileDataArr.forEach(profileItem => console.log(profileItem));
+// };
+// printProfileData(profileDataArgs);
 
-// node app.js
+// // node app.js
