@@ -1,5 +1,9 @@
+const fs = require('fs');
 const inquirer = require('inquirer');
 console.log(inquirer);
+const generatePage = require('./src/page-template.js');
+
+
 
 const promptUser = () => {
   return inquirer.prompt([
@@ -30,31 +34,22 @@ const promptUser = () => {
       }
     },
     {
+      type: 'confirm',
+  name: 'confirmAbout',
+  message: 'Would you like to enter some information about yourself for an "About" section?',
+  default: true
+    },
+    {
       type: 'input',
-      name: 'about',
-      message: 'Provide some information about yourself:',
-      validate: aboutInput => {
-        if (aboutInput) {
-          return true;
-        } else {
-          console.log('Please enter some info about yourself.')
-          return false;
-        }
-      }
-    }
+  name: 'about',
+  message: 'Provide some information about yourself:',
+  when: ({ confirmAbout }) => confirmAbout
+  
+}
+    
   ])
 }
-  promptUser().then(answers => console.log(answers))
-  .then(projectData => {
-    portfolioData.projects.push(projectData);
-    if (projectData.confirmAddProject) {
-      return promptProject(portfolioData);
-    } else {
-      return portfolioData;
-    }
-  });
-
-
+  
 
   const promptProject = portfolioData => {
     console.log(`
@@ -99,17 +94,48 @@ const promptUser = () => {
         message: 'Would you like to enter another project?',
         default: false
       }
-    ]);
-  };
-  promptUser()
-  .then(promptProject)
-  .then(portfolioData => {
-    console.log(portfolioData);
+    ])
+  .then(projectData => {
+    portfolioData.projects.push(projectData);
+    if (projectData.confirmAddProject) {
+      return promptProject(portfolioData);
+    } else {
+      return portfolioData;
+    }
   });
-// const fs = require('fs');
+};
 
-// const generatePage = require('./src/page-template.js');
+promptUser()
+.then(promptProject)
+.then(portfolioData => {
+  const pageHTML = generatePage(portfolioData);
 
+  fs.writeFile('./index.html', pageHTML, err => {
+    if (err) throw new Error(err);
+
+    console.log('Page created! Check out index.html in this directory to see it!');
+  });
+});
+
+  // promptUser()
+  // .then(promptProject)
+  // .then(portfolioData => {
+  //   console.log(portfolioData);
+  // });
+
+  // promptUser()
+  // .then(answers => console.log(answers))
+  // .then(projectData => {
+  //    const pageHTML = generatePage(portfolioData);
+
+   
+  //   portfolioData.projects.push(projectData);
+  //   if (projectData.confirmAddProject) {
+  //     return promptProject(portfolioData);
+  //   } else {
+  //     return portfolioData;
+  //   }
+  // });
 // const pageHTML = generatePage(name, github);
 
 // fs.writeFile('./index.html', pageHTML, err => {
@@ -124,8 +150,12 @@ const promptUser = () => {
 
 
 
-
-
+// const mockData = {
+//   name: 'Lernantino',
+//   github: 'lernantino',
+//   projects: []
+// }
+// const pageHTML = generatePage(mockData);
 
 
 
